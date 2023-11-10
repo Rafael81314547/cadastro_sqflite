@@ -1,6 +1,6 @@
-import 'dart:html';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -32,11 +32,11 @@ class DatabaseHelper{
          version: _databaseVersion,
          onCreate: _onCreate);
   }
-  // codigo sql para criar o banco de dados e a tabela
+    // codigo sql para criar o banco de dados e a tabela
   Future _onCreate(Database db, int version) async {
     await db.execute('''
           CREATE TABLE $table (
-            $columnId INTEGER PRYMARY KEY,
+            $columnId INTEGER PRIMARY KEY,
             $columnNome TEXT NOT NULL,
             $columnIdade INTEGER NOT NULL
           )
@@ -64,17 +64,17 @@ class DatabaseHelper{
   // todos os metodos: inserir, consultar atualizar e excluir
   // tambem podem ser feitos usados comando sql brutos
   // esse metodos usa uma consulta bruta para fornecer a contagem de linhas
-  Future<int?> queryRowCont() async {
+  Future<int?> queryRowCount() async {
     Database db = await instance.database;
     return Sqflite.firstIntValue(
       await db.rawQuery('SELECT COUNT(*) FROM $table'));
   }
 // Assumimos aqui que a coluna id no mapa esta definida. os outros 
 // valores das colunas serão usados para atualizar a linha
-Future<int> updated(Map<String, dynamic> row) async {
+Future<int> update(Map<String, dynamic> row) async {
   Database db = await instance.database;
   int id = row[columnId];
-  return await db.update(table,row, where: '$columnId = ?',
+  return await db.update(table, row, where: '$columnId = ?',
       whereArgs: [id]);
 }
 // exclui a linha especificada pelo id. o numero de linhas afetadas e 
